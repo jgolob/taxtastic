@@ -33,7 +33,7 @@ def action(args):
     r = taxtastic.refpkg.Refpkg(args.refpkg, create=False)
     msg = r.is_ill_formed()
     if msg:
-        print msg
+        print(msg)
         return 1
     else:
         return 0

@@ -149,12 +149,12 @@ def action(args):
             if m and m != t:
                 msg = ("Taxid {0} has been replaced by {1}. "
                        "Please update your records").format(t, m)
-                print >> sys.stderr, msg
+                print(msg, file=sys.stderr)
             else:
-                print >>sys.stderr, "Taxid %s not found in taxonomy." % t
+                print("Taxid %s not found in taxonomy." % t, file=sys.stderr)
             valid_taxids = False
     if not(valid_taxids):
-        print >>sys.stderr, "Some taxids were invalid.  Exiting."
+        print("Some taxids were invalid.  Exiting.", file=sys.stderr)
         return 1  # exits with code 1
 
     # Extract all the taxids to be exported in the CSV file.

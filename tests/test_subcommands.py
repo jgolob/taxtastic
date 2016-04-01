@@ -12,8 +12,8 @@ from taxtastic.subcommands import (
     update, create, strip, rollback, rollforward,
     taxtable, check, add_to_taxtable, merge_taxtables)
 
-import config
-from config import OutputRedirectMixin, data_path, TestBase
+from . import config
+from .config import OutputRedirectMixin, data_path, TestBase
 
 
 class TestUpdate(OutputRedirectMixin, unittest.TestCase):

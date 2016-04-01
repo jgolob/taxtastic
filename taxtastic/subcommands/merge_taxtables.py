@@ -61,7 +61,7 @@ def action(args):
 
         tax_id = lineage['tax_id']
         new_lineage = dict(
-            empty_row, **{k: v or None for k, v in lineage.items()})
+            empty_row, **{k: v or None for k, v in list(lineage.items())})
         if tax_id in tax_ids:
             existing_lineage = tax_ids[tax_id]
             if existing_lineage != new_lineage:
@@ -69,7 +69,7 @@ def action(args):
                 for key in fieldnames:
                     v1, v2 = existing_lineage[key], new_lineage[key]
                     if v1 != v2:
-                        print [key, v1, v2]
+                        print([key, v1, v2])
         else:
             writer.writerow(new_lineage)
             tax_ids[tax_id] = new_lineage

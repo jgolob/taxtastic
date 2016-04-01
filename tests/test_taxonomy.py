@@ -7,8 +7,8 @@ import shutil
 
 from sqlalchemy import create_engine
 
-import config
-from config import TestBase
+from . import config
+from .config import TestBase
 
 import taxtastic
 from taxtastic.taxonomy import Taxonomy
@@ -113,7 +113,7 @@ def test__node():
         'sqlite:///../testfiles/small_taxonomy.db', echo=False)
     tax = Taxonomy(engine, taxtastic.ncbi.ranks)
     assert tax._node(None) is None
-    assert tax._node('91061') == (u'1239', u'class')
+    assert tax._node('91061') == ('1239', 'class')
 
 
 def test_sibling_of():

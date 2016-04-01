@@ -40,7 +40,7 @@ def run_command(args, cwd=None, verbose=False, hide_stderr=False):
     except EnvironmentError:
         e = sys.exc_info()[1]
         if verbose:
-            print("unable to run %s" % args[0])
+            print(("unable to run %s" % args[0]))
             print(e)
         return None
     stdout = p.communicate()[0].strip()
@@ -48,7 +48,7 @@ def run_command(args, cwd=None, verbose=False, hide_stderr=False):
         stdout = stdout.decode()
     if p.returncode != 0:
         if verbose:
-            print("unable to run %s (error)" % args[0])
+            print(("unable to run %s (error)" % args[0]))
         return None
     return stdout
 
@@ -97,15 +97,15 @@ def versions_from_expanded_variables(variables, tag_prefix, verbose=False):
         # "stabilization", as well as "HEAD" and "master".
         tags = set([r for r in refs if re.search(r'\d', r)])
         if verbose:
-            print("discarding '%s', no digits" % ",".join(refs - tags))
+            print(("discarding '%s', no digits" % ",".join(refs - tags)))
     if verbose:
-        print("likely tags: %s" % ",".join(sorted(tags)))
+        print(("likely tags: %s" % ",".join(sorted(tags))))
     for ref in sorted(tags):
         # sorting will prefer e.g. "2.0" over "2.0rc1"
         if ref.startswith(tag_prefix):
             r = ref[len(tag_prefix):]
             if verbose:
-                print("picking %s" % r)
+                print(("picking %s" % r))
             return {"version": r,
                     "full": variables["full"].strip()}
     # no suitable tags, so we use the full revision id
@@ -149,7 +149,7 @@ def versions_from_vcs(tag_prefix, versionfile_source, verbose=False):
         root = (toplevel.strip() if toplevel else os.path.dirname(here))
     if not os.path.exists(os.path.join(root, ".git")):
         if verbose:
-            print("no .git in %s" % root)
+            print(("no .git in %s" % root))
         return {}
 
     stdout = run_command([GIT, "describe", "--tags", "--dirty", "--always"],
@@ -158,8 +158,8 @@ def versions_from_vcs(tag_prefix, versionfile_source, verbose=False):
         return {}
     if not stdout.startswith(tag_prefix):
         if verbose:
-            print("tag '%s' doesn't start with prefix '%s'" %
-                  (stdout, tag_prefix))
+            print(("tag '%s' doesn't start with prefix '%s'" %
+                  (stdout, tag_prefix)))
         return {}
     tag = stdout[len(tag_prefix):]
     stdout = run_command([GIT, "rev-parse", "HEAD"], cwd=root)
@@ -199,8 +199,8 @@ def versions_from_parentdir(
     dirname = os.path.basename(root)
     if not dirname.startswith(parentdir_prefix):
         if verbose:
-            print("guessing rootdir is '%s', but '%s' doesn't start with prefix '%s'" %
-                  (root, dirname, parentdir_prefix))
+            print(("guessing rootdir is '%s', but '%s' doesn't start with prefix '%s'" %
+                  (root, dirname, parentdir_prefix)))
         return None
     return {"version": dirname[len(parentdir_prefix):], "full": ""}
 

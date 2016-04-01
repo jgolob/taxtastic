@@ -308,8 +308,8 @@ class Taxonomy(object):
         """
 
         if not taxa:
-            taxa = self.cached.keys()
-            lin = self.cached.values()
+            taxa = list(self.cached.keys())
+            lin = list(self.cached.values())
         else:
             lin = [self._get_lineage(tax_id) for tax_id in taxa]
 
@@ -411,7 +411,7 @@ class Taxonomy(object):
         if node is None or ancestor is None:
             return False
         l = self.lineage(node)
-        return ancestor in l.values()
+        return ancestor in list(l.values())
 
     def rank(self, tax_id):
         if tax_id is None:

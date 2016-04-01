@@ -15,14 +15,16 @@
 """
 Methods and variables specific to the NCBI taxonomy.
 """
-
+import io
 import itertools
 import logging
 import operator
 import os
 import re
 import sqlite3
-import urllib
+import urllib.error
+import urllib.parse
+import urllib.request
 import zipfile
 
 import sqlalchemy
@@ -30,7 +32,7 @@ from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Index
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
-from errors import IntegrityError
+from .errors import IntegrityError
 
 log = logging
 
@@ -241,7 +243,7 @@ def db_load(engine, archive, root_name='root', maxrows=None):
         # merged
         logging.info("Inserting merged")
         rows = read_archive(archive, 'merged.dmp')
-        rows = (dict(zip(['old_tax_id', 'new_tax_id'], row)) for row in rows)
+        rows = (dict(list(zip(['old_tax_id', 'new_tax_id'], row))) for row in rows)
         do_insert(engine, 'merged', rows, maxrows, add=False)
 
         fix_missing_primary(engine)
@@ -424,7 +426,7 @@ def fetch_data(dest_dir='.', clobber=False, url=ncbi_data_url):
     else:
         downloaded = True
         log.warning('downloading %(url)s to %(fout)s' % locals())
-        urllib.urlretrieve(url, fout)
+        urllib.request.urlretrieve(url, fout)
 
     return (fout, downloaded)
 
@@ -436,9 +438,8 @@ def read_archive(archive, fname):
     * archive - path to the zip archive.
     * fname - name of the compressed file within the archive.
     """
-
     zfile = zipfile.ZipFile(archive, 'r')
-    for line in zfile.read(fname).splitlines():
+    for line in io.TextIOWrapper(zfile.open(fname)).read().splitlines():
         yield line.rstrip('\t|\n').split('\t|\t')
 
 
@@ -460,13 +461,13 @@ def read_nodes(rows, root_name, ncbi_source_id):
     rank = idx['rank']
 
     # assume the first row is the root
-    row = rows.next()
+    row = next(rows)
     row[rank] = root_name
     rows = itertools.chain([row], rows)
 
     colnames = keys + ['source_id']
     for r in rows:
-        row = dict(zip(colnames, r))
+        row = dict(list(zip(colnames, r)))
         assert len(row) == len(colnames)
 
         # replace whitespace in "rank" with underscore
@@ -525,5 +526,5 @@ def read_names(rows, unclassified_regex=None):
     # appends additional field is_primary
     colnames = keys + ['is_primary', 'is_classified']
     for r in rows:
-        row = dict(zip(colnames, r + [_is_primary(r), _is_classified(r)]))
+        row = dict(list(zip(colnames, r + [_is_primary(r), _is_classified(r)])))
         yield row

@@ -54,7 +54,7 @@ def action(args):
 
     # First check if we can do n rollforwards
     q = r.contents
-    for i in xrange(args.n):
+    for i in range(args.n):
         if q['rollforward'] is None:
             log.error(
                 'Cannot rollforward {} changes; '
@@ -63,6 +63,6 @@ def action(args):
         else:
             q = q['rollforward'][1]
 
-    for i in xrange(args.n):
+    for i in range(args.n):
         r.rollforward()
     return 0

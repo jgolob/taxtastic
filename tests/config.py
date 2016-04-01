@@ -1,12 +1,12 @@
 import contextlib
-from cStringIO import StringIO
+from io import StringIO
 import os
 from os import path
 import sys
 import logging
 import re
 import unittest
-import commands
+import subprocess
 import shutil
 import tempfile
 
@@ -147,7 +147,7 @@ class TestScriptBase(OutputRedirectMixin, TestBase):
             cmd = self.executable
         input = (cmd + ' ' + args) % self
         log.info('--> ' + input)
-        status, output = commands.getstatusoutput(input)
+        status, output = subprocess.getstatusoutput(input)
         log.info(output)
         return status, output
 

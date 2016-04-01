@@ -53,8 +53,8 @@ def get_children(engine, parent_ids, rank='species'):
     species = []
     for parent_id in parent_ids:
         result = engine.execute(cmd % parent_id)
-        keys = result.keys()
-        rows = [dict(zip(keys, row)) for row in result.fetchall()]
+        keys = list(result.keys())
+        rows = [dict(list(zip(keys, row))) for row in result.fetchall()]
         species.extend([r for r in rows
                         if r['rank'] == rank and 'sp.' not in r['tax_name']])
 
@@ -138,5 +138,5 @@ def action(args):
             keys, rows = get_children(engine, [tax_id])
             taxa.update(dict((row['tax_id'], row) for row in rows))
 
-    for d in sorted(taxa.values(), key=lambda x: x['tax_name']):
+    for d in sorted(list(taxa.values()), key=lambda x: x['tax_name']):
         outfile.write('%(tax_id)s # %(tax_name)s\n' % d)

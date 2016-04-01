@@ -28,7 +28,7 @@ def apply_df_status(func, df, msg=''):
     """
     tmp_column = 'index_number'
     row_count = float(len(df))
-    df[tmp_column] = xrange(int(row_count))
+    df[tmp_column] = range(int(row_count))
     msg += ' {:.0%}\r'
 
     def apply_func(item, msg):
@@ -77,7 +77,7 @@ def try_set_fields(d, regex, text, hook=lambda x: x):
     v = re.search(regex, text, re.MULTILINE)
     if v:
         d.update(dict([(key, hook(val)) for key, val
-                       in v.groupdict().iteritems()]))
+                       in v.groupdict().items()]))
     return d
 
 
@@ -142,15 +142,15 @@ def parse_fasttree(fobj):
         if splut[0] == 'FastTree':
             data['program'] = line.strip()
         elif splut[0] == 'Rates':
-            data['Price-CAT']['Rates'] = map(float, splut[1:])
+            data['Price-CAT']['Rates'] = list(map(float, splut[1:]))
         elif splut[0] == 'SiteCategories':
-            data['Price-CAT']['SiteCategories'] = map(int, splut[1:])
+            data['Price-CAT']['SiteCategories'] = list(map(int, splut[1:]))
         elif splut[0] == 'NCategories':
             data['Price-CAT']['n_cats'] = int(splut[1])
         elif splut[0] == 'GTRRates':
             data['subs_rates'] = dict(
-                zip(['ac', 'ag', 'at', 'cg', 'ct', 'gt'],
-                    map(float, splut[1:])))
+                list(zip(['ac', 'ag', 'at', 'cg', 'ct', 'gt'],
+                    list(map(float, splut[1:])))))
         elif line.strip() == JTT_MODEL:
             data['subs_model'] = 'JTT'
             data['datatype'] = 'AA'

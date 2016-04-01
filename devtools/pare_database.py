@@ -31,7 +31,7 @@ def lineage(taxonomy, tax_id):
         if m != tax_id:
             return lineage(taxonomy, m)
         else:
-            print >> sys.stderr, "unknown taxid:", tax_id
+            print("unknown taxid:", tax_id, file=sys.stderr)
             return []
 
 
@@ -65,26 +65,26 @@ def main():
 
     with tempfile.NamedTemporaryFile() as tf:
         with open(a.d) as fp:
-            print >> sys.stderr, "copying db"
+            print("copying db", file=sys.stderr)
             shutil.copyfileobj(fp, tf, 20 << 10)
         tf.flush()
 
         con = sqlite3.connect(tf.name)
         cur = con.cursor()
         ic = in_clause(keep_taxa)
-        print >> sys.stderr, "pruning nodes"
+        print("pruning nodes", file=sys.stderr)
         cur.execute("DELETE FROM nodes WHERE tax_id NOT IN {0}".format(
             ic), list(keep_taxa))
-        print >> sys.stderr, "pruning names"
+        print("pruning names", file=sys.stderr)
         cur.execute("DELETE FROM names WHERE tax_id NOT IN {0}".format(
             ic), list(keep_taxa))
-        print >> sys.stderr, "pruning merged"
+        print("pruning merged", file=sys.stderr)
         cur.execute("DELETE FROM merged WHERE old_tax_id NOT IN {0} AND new_tax_id NOT IN {0}".format(ic),
                     list(keep_taxa) + list(keep_taxa))
 
         with a.output_file as fp:
             for stmt in con.iterdump():
-                print >> fp, stmt
+                print(stmt, file=fp)
 
 if __name__ == '__main__':
     main()

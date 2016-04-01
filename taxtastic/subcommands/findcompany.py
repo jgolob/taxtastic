@@ -76,7 +76,7 @@ def action(args):
         txt += "%s\n" % (t if t else "")
     if args.output:
         with open(args.output, 'w') as h:
-            print >>h, txt
+            print(txt, file=h)
     else:
-        print txt
+        print(txt)
     return 0

@@ -2,7 +2,7 @@
 Test update_taxids
 """
 
-import config
+from . import config
 import filecmp
 import logging
 import os
