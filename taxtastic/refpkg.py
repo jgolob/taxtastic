@@ -52,8 +52,9 @@ class DerivedFileNotUpdatedWarning(UserWarning):
 
 def md5file(fobj):
     md5 = hashlib.md5()
-    for block in iter(lambda: fobj.read(4096), ''):
-        md5.update(block)
+    with fobj:
+        for block in iter(lambda: fobj.read(4096), b''):
+            md5.update(block)
     return md5.hexdigest()
 
 
@@ -256,7 +257,7 @@ class Refpkg(object):
 
     def calculate_resource_md5(self, resource):
         """Calculate the MD5 sum for a particular named resource."""
-        return md5file(self.open_resource(resource, 'r'))
+        return md5file(self.open_resource(resource, 'rb'))
 
     def resource_path(self, resource):
         """
@@ -458,7 +459,7 @@ class Refpkg(object):
         else:
             old_path = None
         self._add_file(key, new_path)
-        md5_value = md5file(open(new_path))
+        md5_value = md5file(open(new_path, mode='rb'))
         self.contents['md5'][key] = md5_value
         self._log('Updated file: %s=%s' % (key, new_path))
         if key == 'tree_stats' and old_path:
@@ -650,7 +651,7 @@ class Refpkg(object):
             try:
                 Bio.SeqIO.read(f, 'fasta')
             except ValueError as v:
-                if v[0] == 'No records found in handle':
+                if str(v) == 'No records found in handle':
                     return 'aln_fasta file is not valid FASTA.'
 
         with self.open_resource('seq_info') as f:
@@ -669,7 +670,7 @@ class Refpkg(object):
             try:
                 Bio.SeqIO.read(f, 'stockholm')
             except ValueError as v:
-                if v[0] == 'No records found in handle':
+                if str(v) == 'No records found in handle':
                     return 'aln_sto file is not valid Stockholm.'
 
         with self.open_resource('tree') as f:

@@ -266,7 +266,7 @@ def fix_missing_primary(engine):
             FROM names
             WHERE tax_id = ?"""
         tax_ids = [i[0] for i in cursor.execute(missing_primary)]
-        logging.warn("%d records lack primary names", len(tax_ids))
+        logging.warning("%d records lack primary names", len(tax_ids))
 
         for tax_id in tax_ids:
             records = list(cursor.execute(rows_for_taxid, [tax_id]))

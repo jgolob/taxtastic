@@ -278,7 +278,7 @@ class TestTaxtable(OutputRedirectMixin, unittest.TestCase):
                 self.assertEqual(taxtable.action(_Args()), 1)
 
     def test_seqinfo(self):
-        with tempfile.TemporaryFile() as tf, \
+        with tempfile.TemporaryFile(mode='w') as tf, \
                 open(config.data_path('simple_seqinfo.csv')) as ifp:
             class _Args(object):
                 database_file = config.ncbi_master_db
@@ -297,7 +297,7 @@ class TestAddToTaxtable(OutputRedirectMixin, unittest.TestCase):
     maxDiff = None
 
     def test_seqinfo(self):
-        with tempfile.TemporaryFile() as tf, \
+        with tempfile.TemporaryFile(mode='w') as tf, \
                 open(config.data_path('minimal_taxonomy.csv')) as taxtable_fp, \
                 open(config.data_path('minimal_add_taxonomy.csv')) as extra_nodes_fp:
             class _Args(object):

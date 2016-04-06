@@ -32,16 +32,22 @@ log = logging.getLogger(__name__)
 
 def build_parser(parser):
     parser.add_argument(
-        'infiles', nargs='+', type=argparse.FileType(),
+        'infiles', nargs='+', type=argparse.FileType('r'),
         help="""One or more taxtables""")
     parser.add_argument(
         '-o', '--outfile', type=argparse.FileType('w'), default=sys.stdout,
         metavar='FILE', help="""csv file containing merged taxtables""")
 
 
+def close_files(*files):
+    for f in files:
+        f.close()
+
+
 def action(args):
     first, others = args.infiles[0], args.infiles[1:]
     if not others:
+        close_files(args.outfile, *args.infiles)
         sys.exit('At least two taxtables are required')
 
     reader = csv.DictReader(first)
@@ -57,6 +63,7 @@ def action(args):
         if set(lineage.keys()) - initial_names:
             log.error('A file contains taxa not found in {}: {}'.format(
                 first.name, set(lineage.keys()) - initial_names))
+            close_files(args.outfile, *args.infiles)
             sys.exit(1)
 
         tax_id = lineage['tax_id']
@@ -73,3 +80,5 @@ def action(args):
         else:
             writer.writerow(new_lineage)
             tax_ids[tax_id] = new_lineage
+
+    close_files(args.outfile, *args.infiles)

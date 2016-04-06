@@ -44,7 +44,7 @@ def get_new_nodes(fname):
     Return an iterator of dicts given a .csv-format file.
     """
 
-    with open(fname, 'rU') as infile:
+    with open(fname, 'r') as infile:
         reader = list(csv.DictReader(infile))
         rows = (d for d in reader if d['tax_id'])
 
@@ -67,7 +67,7 @@ def getlines(fname):
     the first '#' character.
     """
 
-    with open(fname, 'rU') as f:
+    with open(fname, 'r') as f:
         for line in f:
             if line.strip() and not line.startswith('#'):
                 yield line.split('#', 1)[0].strip()
@@ -150,7 +150,7 @@ def parse_fasttree(fobj):
         elif splut[0] == 'GTRRates':
             data['subs_rates'] = dict(
                 list(zip(['ac', 'ag', 'at', 'cg', 'ct', 'gt'],
-                    list(map(float, splut[1:])))))
+                     list(map(float, splut[1:])))))
         elif line.strip() == JTT_MODEL:
             data['subs_model'] = 'JTT'
             data['datatype'] = 'AA'

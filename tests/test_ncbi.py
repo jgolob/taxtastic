@@ -103,7 +103,7 @@ class TestReadNames(TestBase):
         rows = read_names(rows=read_archive(self.zipfile, 'names.dmp'),
                           unclassified_regex=UNCLASSIFIED_REGEX)
         self.assertEqual(set(row['is_classified']
-                              for row in rows), set([0, 1]))
+                         for row in rows), set([0, 1]))
 
     def test02(self):
         """
@@ -112,7 +112,7 @@ class TestReadNames(TestBase):
 
         rows = read_names(rows=read_archive(self.zipfile, 'names.dmp'))
         self.assertEqual(set(row['is_classified']
-                              for row in rows), set([None]))
+                         for row in rows), set([None]))
 
 
 class TestUnclassifiedRegex(TestBase):

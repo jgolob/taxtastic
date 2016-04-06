@@ -27,15 +27,21 @@ log = logging.getLogger(__name__)
 
 def build_parser(parser):
     parser.add_argument(
-        "taxtable", type=argparse.FileType('r'), help="""A taxtable to augment""")
+        "taxtable",
+        type=argparse.FileType('r'),
+        help="""A taxtable to augment""")
     parser.add_argument(
-        'extra_nodes_csv', type=argparse.FileType('r'), help="""A CSV
+        'extra_nodes_csv',
+        type=argparse.FileType('r'),
+        help="""A CSV
         file containing nodes to add to taxtable. Must contain columns
         'tax_id', 'tax_name', 'rank', and 'parent_id'. Each record
         must have a parent_id already in the taxtable, or defined on
         an earlier row.""")
     parser.add_argument(
-        '-o', '--out-file', type=argparse.FileType('w'), default=sys.stdout,
+        '-o', '--out-file',
+        type=argparse.FileType('w'),
+        default=sys.stdout,
         help="""Destination for output taxtable [default: stdout]""")
 
 

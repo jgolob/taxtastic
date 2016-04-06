@@ -97,7 +97,7 @@ class TestRefpkg(unittest.TestCase):
             r = refpkg.Refpkg(pkg_path, create=True)
             test_file = config.data_path('bv_refdata.csv')
             test_name = 'bv_refdata.csv'
-            md5_value = refpkg.md5file(open(test_file))
+            md5_value = refpkg.md5file(open(test_file, mode='rb'))
             self.assertEqual(None, r.update_file('a', test_file))
             # Make sure it's properly written
             with open(os.path.join(r.path, r._manifest_name)) as h:
@@ -144,7 +144,7 @@ class TestRefpkg(unittest.TestCase):
             r = refpkg.Refpkg(rpkg, create=False)
             r.reroot()
             self.assertEqual('9bdbf22f8bf140074d126f3d27989100',
-                             r.file_md5('tree'))
+                             r.resource_md5('tree'))
             self.assertEqual(r.log(), ['Rerooting refpkg'])
 
     @unittest.skipUnless(HAS_RPPR, "`rppr` binary is not installed.")
@@ -156,7 +156,7 @@ class TestRefpkg(unittest.TestCase):
             r = refpkg.Refpkg(rpkg, create=False)
             r.reroot(pretend=True)
             self.assertEqual('2f11faa616fc7f04d7694436b5cca05f',
-                             r.file_md5('tree'))
+                             r.resource_md5('tree'))
 
     def test_transaction(self):
         with config.tempdir() as d:
