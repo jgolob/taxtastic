@@ -44,7 +44,7 @@ def main(argv):
         logformat = '%(message)s'
 
     # set up logging
-    logging.basicConfig(file=sys.stdout, format=logformat, level=loglevel)
+    logging.basicConfig(stream=sys.stdout, format=logformat, level=loglevel)
 
     return action(arguments)
 
@@ -62,8 +62,8 @@ def parse_arguments(argv):
 
     base_parser.add_argument('-v', '--verbose',
                              action='count', dest='verbosity', default=1,
-                             help='Increase verbosity of screen output (eg, -v is verbose, '
-                             '-vv more so)')
+                             help=('Increase verbosity of screen output '
+                                   '(eg, -v is verbose, -vv more so)'))
     base_parser.add_argument('-q', '--quiet',
                              action='store_const', dest='verbosity', const=0,
                              help='Suppress output')
